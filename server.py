@@ -15,7 +15,7 @@ login_manager.init_app(app)
 class Base(DeclarativeBase):
     pass
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main_database3.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main_database.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
