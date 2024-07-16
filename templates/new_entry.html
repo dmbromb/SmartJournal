@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    <h1 class="title mb-4 mt-4">Journal Entry for {{date}}</h1>
+    <div class="card">
+
+        <div class="card-body">
+            <form id="textForm" method="POST">
+                <textarea class="form-control" id="journal_entry" name="journal_entry" rows="10" placeholder="Type anything..."></textarea>
+
+                <button type="submit" class="btn btn-primary btn-large btn-block mt-4">Save Entry</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+{% endblock %}

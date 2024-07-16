@@ -29,6 +29,16 @@ class User(UserMixin, db.Model):
     created_on = db.Column(db.DateTime, default=datetime.now())
     last_signed_in = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
     sign_in_count = db.Column(db.Integer, default=0)
+    journal_entry = db.relationship('Journal_Entry', back_populates='user', cascade="all, delete-orphan")
+
+class Journal_Entry(db.Model):
+    __tablename__ = 'journal_entry'
+    id = db.Column(db.Integer, primary_key=True)
+    entry = db.Column(db.String(10000))
+    created_on = db.Column(db.DateTime, default=datetime.now())
+    last_edited = db.Column(db.DateTime, default=datetime.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', back_populates='journal_entry')
 
 
 with app.app_context():
@@ -94,6 +104,27 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     return render_template("dashboard.html", logged_in=True)
+
+@app.route('/new_entry', methods = ['GET', 'POST'])
+def new_entry():
+    today = datetime.now().strftime('%a, %b %d, %Y')
+    if request.method == 'POST':
+        journal_entry = request.form.get('journal_entry')
+        #Save in database
+        new_entry = Journal_Entry(
+            entry = journal_entry,
+            user_id = current_user.id
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template("new_entry.html", logged_in=True, date=today)
+
+@app.route('/view_past_entries')
+def view_past_entries():
+    return render_template("view_past_entries.html", logged_in=True)
+
+
 
 @app.route('/logout')
 def logout():

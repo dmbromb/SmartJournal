@@ -2,6 +2,15 @@
 
 <div class="box">
   <h1>Dashboard</h1>
+  <a href="{{url_for('new_entry')}}" class="btn btn-primary btn-block btn-large"
+    >New Entry</a
+  >
+  <a
+    href="{{url_for('view_past_entries')}}"
+    class="btn btn-secondary btn-block btn-large"
+    >Past Entries</a
+  >
 </div>
+
 
 {% endblock %}
