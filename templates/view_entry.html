@@ -1,3 +1,18 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
 
+{% block content %}
+<div class="container">
+    <h1 class="title mb-4 mt-4">Journal Entry for {{ date }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <textarea class="form-control" id="journal_entry" name="journal_entry" rows="10" readonly>{{ entry.entry }}</textarea>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-large mt-4">Back to Dashboard</a>
+            <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large mt-4">Back to Calendar</a>
+            <form action="{{ url_for('delete_entry') }}" method="POST" style="display:inline;">
+                <input type="hidden" name="entry_date" value="{{ date }}">
+                <button type="submit" class="btn btn-danger btn-large mt-4">Delete Entry</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

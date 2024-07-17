@@ -1,97 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
-.btn {
-    display: inline-block;
-    *display: inline;
-    *zoom: 1;
-    padding: 4px 10px 4px;
-    margin-bottom: 0;
-    font-size: 13px;
-    line-height: 18px;
-    color: #333333;
-    text-align: center;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-    vertical-align: middle;
-    background-color: #f5f5f5;
-    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
-    background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
-    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
-    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
-    background-image: linear-gradient(top, #ffffff, #e6e6e6);
-    background-repeat: repeat-x;
-    filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0);
-    border-color: #e6e6e6 #e6e6e6 #e6e6e6;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    border: 1px solid #e6e6e6;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    *margin-left: .3em;
-}
 
-.btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
-    background-color: #e6e6e6;
-}
 
-.btn-large {
-    padding: 9px 14px;
-    font-size: 15px;
-    line-height: normal;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.btn:hover {
-    color: #333333;
-    text-decoration: none;
-    background-color: #e6e6e6;
-    background-position: 0 -15px;
-    -webkit-transition: background-position 0.1s linear;
-    -moz-transition: background-position 0.1s linear;
-    -ms-transition: background-position 0.1s linear;
-    -o-transition: background-position 0.1s linear;
-    transition: background-position 0.1s linear;
-}
-
-.btn-primary, .btn-primary:hover {
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    color: #ffffff;
-}
-
-.btn-primary.active {
-    color: rgba(255, 255, 255, 0.75);
-}
-
-.btn-primary {
-    background-color: #4a77d4;
-    background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4);
-    background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4));
-    background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4);
-    background-image: -o-linear-gradient(top, #6eb6de, #4a77d4);
-    background-image: linear-gradient(top, #6eb6de, #4a77d4);
-    background-repeat: repeat-x;
-    filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);
-    border: 1px solid #3762bc;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
-    filter: none;
-    background-color: #4a77d4;
-}
-
-.btn-block {
-    width: 100%;
-    display:block;
-    margin-bottom:20px;
-}
 
 * {
     -webkit-box-sizing:border-box;
@@ -138,6 +47,7 @@ a {
     margin: -150px 0 0 -150px;
     width:300px;
     height:300px;
+    text-align: center;
 }
 
 .box h1 {
@@ -183,130 +93,12 @@ input:focus {
     box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
 }
 
-.card-body {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    position: relative; /* Ensure positioning relative to the button */
-}
-
-.card-body label {
-    display: block; /* Ensures the label takes up the full width */
-    font-weight: bold; /* Makes the label text bold */
-    margin-bottom: 5px; /* Adds some space below the label */
-    text-align: left; /* Ensures the text is left-aligned */
-}
-
-.card-body .input, .card-body input {
-    background: white; /* Ensures input background is white */
-    color: black; /* Ensures input text is black */
-    padding: 10px; /* Adds some padding inside the input boxes */
-    border: 1px solid #ccc; /* Adds a border to the input boxes */
-    border-radius: 5px; /* Slightly rounds the corners of the input boxes */
-    margin-bottom: 10px; /* Adds some space below each input box */
-    width: 100%; /* Makes the input boxes full width within the form */
-}
-
-.card-body input::placeholder {
-    color: #888; /* Sets the placeholder text color to a lighter grey */
-}
-
-.custom-button {
-    position: absolute;
-    bottom: -15px; /* Position the button to overlap with the card-body */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px; /* Set the width of the square button */
-    height: 30px; /* Set the height of the square button */
-    border-radius: 10%; /* Rounded corners */
-    background-color: green; /* Button background color */
-    color: white; /* Button text color */
-    border: none; /* Remove default border */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Optional shadow for better visibility */
-    cursor: pointer; /* Pointer cursor on hover */
-}
-
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
+table.table {
+    table-layout: fixed;
     width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
 }
 
-#sidebar {
-    position: fixed;
-    left: 0;
-    top: 70px; /* Adjusted dynamically by JavaScript */
-    width: 250px;
-    height: calc(100% - 70px); /* Adjusted dynamically by JavaScript */
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    overflow-y: auto;
+table.table th, table.table td {
+    width: 14.2857%; /* 100% divided by 7 (number of columns) */
+    text-align: center; /* Optional: center the text */
 }
-
-#main-content {
-    margin-left: 270px;
-    padding: 20px;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
-.loading-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    text-align: center;
-}
-
-.spinner-border {
-    width: 3rem;
-    height: 3rem;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: inner-spin-button;
-    opacity: 1;
-}
-
-.delete-form {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-}
-
-.delete-button {
-    font-size: 1.5rem;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: red;
-}
-
-.delete-button:hover {
-    color: darkred;
-}
-
-.card-body {
-    position: relative;
-}
-
