@@ -4,12 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from datetime import datetime
-import os
 import calendar
 from openai import OpenAI
 
 API_KEY = 'sk-proj-x85B7R8nmuv7OY1krL0sT3BlbkFJnRrgAoL4fHnJp7G8nhwi'
 client = OpenAI(api_key=API_KEY)
+
+import openai
 
 def process_query(question, user):
     entries = db.session.query(Journal_Entry).filter(Journal_Entry.user_id == user.id).all()
@@ -20,26 +21,41 @@ def process_query(question, user):
     prompt = ''
 
     for d, e in zip(dates, entries):
-        prompt+= f'{d}: \n {e} \n\n'
+        prompt += f'{d}: \n{e}\n\n'
 
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You are an AI Chatbot, skilled in in answering questions about"
-                                          "a person's past based on a list of entries and dates. You answer happilly, and always ask if you can help the user with another question"},
-            {"role": "user", "content": f"Answer the following question based on the context provided.\n"
-                                        f"Question: {question}."
-                                        f"Context: "
-                                        f"{prompt}."
-                                        f"Specifications:"
-                                        f"-Answers must only contain characters that look good when rendered by HTML."
-                                        f"-Answer to me as if I were the user."
-                                        f"-Give me your best answer, which is not a question."
-                                        f"-Answer to me succintly."}
-            ]
-        )
-    answer = (completion.choices[0].message.content)
+            {
+                "role": "system",
+                "content": (
+                    "You are a friendly and knowledgeable AI assistant, specialized in helping users reflect on their past activities and thoughts. "
+                    "Your job is to provide insightful and relevant answers based on the user's past journal entries. "
+                    "When answering questions, always be concise, clear, and supportive. Offer further assistance if needed."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Here are the user's past journal entries:\n{prompt}\n"
+                    "Based on these entries, answer the following question:\n"
+                    f"Question: {question}\n"
+                    "Guidelines for your response:\n"
+                    "- Focus on information derived from the provided entries.\n"
+                    "- Ensure your answer is clear and succinct.\n"
+                    "- Respond as if you are a helpful assistant providing personal insights.\n"
+                    "- Avoid asking questions; provide informative and supportive responses.\n"
+                    "- Use a friendly and supportive tone.\n"
+                    "- Ensure the text renders well in HTML format."
+                )
+            }
+        ]
+    )
+    answer = completion.choices[0].message.content
     return answer
+
+
+
 
 
 app = Flask(__name__)
@@ -70,6 +86,7 @@ class User(UserMixin, db.Model):
     last_signed_in = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
     sign_in_count = db.Column(db.Integer, default=0)
     journal_entry = db.relationship('Journal_Entry', back_populates='user', cascade="all, delete-orphan")
+    ai_question = db.relationship('Ai_Question', back_populates='user', cascade="all, delete-orphan")
 
 
 class Journal_Entry(db.Model):
@@ -81,6 +98,15 @@ class Journal_Entry(db.Model):
     last_edited = db.Column(db.DateTime, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='journal_entry')
+
+class Ai_Question(db.Model):
+    __tablename__ = 'ai_question'
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(10000))
+    answer = db.Column(db.String(10000))
+    created_on = db.Column(db.DateTime, default=datetime.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', back_populates='ai_question')
 
 
 with app.app_context():
@@ -215,6 +241,13 @@ def delete_entry():
 def submit_ai_question():
     question = request.json.get('ai_question')
     answer = process_query(question, current_user)
+    new_question = Ai_Question(
+        question = question,
+        answer = answer,
+        user_id = current_user.id
+    )
+    db.session.add(new_question)
+    db.session.commit()
     return jsonify(success=True, answer=answer)
 
 @app.route('/logout')
