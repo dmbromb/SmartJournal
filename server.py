@@ -35,8 +35,7 @@ def process_query(question, user):
                                         f"-Answers must only contain characters that look good when rendered by HTML."
                                         f"-Answer to me as if I were the user."
                                         f"-Give me your best answer, which is not a question."
-                                        f"-Answer to me succintly."
-                                        f"-If the questions are unrelated to the entries, say happilly that you can only answer questions about you relative to the journal entries."}
+                                        f"-Answer to me succintly."}
             ]
         )
     answer = (completion.choices[0].message.content)
