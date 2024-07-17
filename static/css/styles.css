@@ -60,7 +60,11 @@ a {
 .container {
     margin-top: 10rem;
     text-align: center;
+    border-radius: 10px;
 }
+
+
+
 
 .container h1 {
     color: #fff;
@@ -102,3 +106,4 @@ table.table th, table.table td {
     width: 14.2857%; /* 100% divided by 7 (number of columns) */
     text-align: center; /* Optional: center the text */
 }
+

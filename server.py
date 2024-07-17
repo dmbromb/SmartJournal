@@ -6,6 +6,42 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from datetime import datetime
 import os
 import calendar
+from openai import OpenAI
+
+API_KEY = 'sk-proj-x85B7R8nmuv7OY1krL0sT3BlbkFJnRrgAoL4fHnJp7G8nhwi'
+client = OpenAI(api_key=API_KEY)
+
+def process_query(question, user):
+    entries = db.session.query(Journal_Entry).filter(Journal_Entry.user_id == user.id).all()
+    if not entries:
+        abort(404)
+    dates = [entry.entry_date for entry in entries]
+    entries = [entry.entry for entry in entries]
+    prompt = ''
+
+    for d, e in zip(dates, entries):
+        prompt+= f'{d}: \n {e} \n\n'
+
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are an AI Chatbot, skilled in in answering questions about"
+                                          "a person's past based on a list of entries and dates. You answer happilly, and always ask if you can help the user with another question"},
+            {"role": "user", "content": f"Answer the following question based on the context provided.\n"
+                                        f"Question: {question}."
+                                        f"Context: "
+                                        f"{prompt}."
+                                        f"Specifications:"
+                                        f"-Answers must only contain characters that look good when rendered by HTML."
+                                        f"-Answer to me as if I were the user."
+                                        f"-Give me your best answer, which is not a question."
+                                        f"-Answer to me succintly."
+                                        f"-If the questions are unrelated to the entries, say happilly that you can only answer questions about you relative to the journal entries."}
+            ]
+        )
+    answer = (completion.choices[0].message.content)
+    return answer
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key-goes-here'
@@ -175,6 +211,12 @@ def delete_entry():
     db.session.commit()
     return redirect(url_for('view_past_entries'))
 
+@app.route('/submit_ai_question', methods=['POST'])
+@login_required
+def submit_ai_question():
+    question = request.json.get('ai_question')
+    answer = process_query(question, current_user)
+    return jsonify(success=True, answer=answer)
 
 @app.route('/logout')
 def logout():
