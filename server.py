@@ -18,11 +18,11 @@ def process_query(question, user):
         abort(404)
     dates = [entry.entry_date for entry in entries]
     entries = [entry.entry for entry in entries]
-    prompt = ''
+    journal_entries_string = ''
 
     for d, e in zip(dates, entries):
-        prompt += f'{d}: \n{e}\n\n'
-
+        journal_entries_string += f'{d}: \n{e}\n\n'
+    print(journal_entries_string)
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[
@@ -37,16 +37,16 @@ def process_query(question, user):
             {
                 "role": "user",
                 "content": (
-                    f"Here are the user's past journal entries:\n{prompt}\n"
+                    f"Here are the user's past journal entries:\n{journal_entries_string}\n\n\n"
                     "Based on these entries, answer the following question:\n"
                     f"Question: {question}\n"
                     "Guidelines for your response:\n"
                     "- Focus on information derived from the provided entries.\n"
-                    "- Ensure your answer is clear and succinct.\n"
+                    "- Ensure your answer is clear, succinct, direct to the point.\n"
                     "- Respond as if you are a helpful assistant providing personal insights.\n"
                     "- Avoid asking questions; provide informative and supportive responses.\n"
-                    "- Use a friendly and supportive tone.\n"
-                    "- Ensure the text renders well in HTML format."
+                    "- Use a friendly and supportive tone."
+                    "- Limit your answers to 50 words or less\n"
                 )
             }
         ]
@@ -242,13 +242,14 @@ def submit_ai_question():
     question = request.json.get('ai_question')
     answer = process_query(question, current_user)
     new_question = Ai_Question(
-        question = question,
-        answer = answer,
-        user_id = current_user.id
+        question=question,
+        answer=answer,
+        user_id=current_user.id
     )
     db.session.add(new_question)
     db.session.commit()
     return jsonify(success=True, answer=answer)
+
 
 @app.route('/logout')
 def logout():

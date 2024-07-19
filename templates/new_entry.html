@@ -1,19 +1,33 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 
 <div class="container">
     <h1 class="title mb-4 mt-4">Journal Entry for {{date}}</h1>
     <div class="card">
-
         <div class="card-body">
             <form id="textForm" method="POST">
                 <textarea class="form-control" id="journal_entry" name="journal_entry" rows="10" placeholder="Type all of your thoughts?..."></textarea>
-                <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-large mt-4">Back to Dashboard</a>
-                <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large mt-4">Back to Calendar</a>
-                <button type="submit" class="btn btn-primary btn-large mt-4">Save Entry</button>
+
+                <div class="btn-group mt-4">
+                    <!-- Functionality Button -->
+                    <button type="button" class="btn btn-warning btn-large" id="record-button">Record Voice Entry</button>
+                </div>
+                <div class="btn-group mt-4">
+                    <!-- Save Button -->
+                    <button type="submit" class="btn btn-primary btn-large">Save Entry</button>
+                </div>
+                <div class="btn-group mt-4">
+                    <!-- Navigation Buttons -->
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-large">Back to Dashboard</a>
+                    <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large">Back to Calendar</a>
+                </div>
             </form>
         </div>
     </div>
 </div>
-</body>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/voice_to_text.js') }}"></script>
 {% endblock %}

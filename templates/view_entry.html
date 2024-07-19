@@ -6,12 +6,18 @@
     <div class="card">
         <div class="card-body">
             <textarea class="form-control" id="journal_entry" name="journal_entry" rows="10" readonly>{{ entry.entry }}</textarea>
-            <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-large mt-4">Back to Dashboard</a>
-            <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large mt-4">Back to Calendar</a>
-            <form action="{{ url_for('delete_entry') }}" method="POST" style="display:inline;">
-                <input type="hidden" name="entry_date" value="{{ date }}">
-                <button type="submit" class="btn btn-danger btn-large mt-4">Delete Entry</button>
-            </form>
+            <div class="btn-group mt-4">
+                <!-- Delete Button -->
+                <form action="{{ url_for('delete_entry') }}" method="POST">
+                    <input type="hidden" name="entry_date" value="{{ date }}">
+                    <button type="submit" class="btn btn-danger btn-large">Delete Entry</button>
+                </form>
+            </div>
+            <div class="btn-group mt-4">
+                <!-- Navigation Buttons -->
+                <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-large">Back to Dashboard</a>
+                <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large">Back to Calendar</a>
+            </div>
         </div>
     </div>
 </div>

@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        const chatItem = createAnswerElement(question, data.answer);
-        answersContainer.appendChild(chatItem);
+        const answerElement = createAnswerElement(question, data.answer);
+        answersContainer.appendChild(answerElement);
         form.reset(); // Clear the input field after submission
         answersContainer.scrollTop = answersContainer.scrollHeight; // Scroll to the bottom
       } else {
@@ -41,30 +41,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const answerElement = document.createElement("div");
     answerElement.classList.add("chat-bubble", "chat-bubble-answer");
+    answerElement.textContent = answer;
+
     chatItem.appendChild(questionElement);
     chatItem.appendChild(answerElement);
 
-    typeText(answer, answerElement);
-
     return chatItem;
   }
-
-  function typeText(text, element) {
-    element.textContent = "";
-    let index = 0;
-    const speed = 10; // Adjust the speed of typing here (lower value = faster typing)
-
-    function type() {
-      if (index < text.length) {
-        element.textContent += text.charAt(index);
-        index++;
-        setTimeout(type, speed);
-      }
-    }
-
-    type();
-  }
 });
-
-
-
