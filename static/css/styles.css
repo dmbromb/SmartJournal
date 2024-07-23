@@ -72,14 +72,24 @@ a:hover {
     outline: none; /* Prevents the outline when clicked */
 }
 
+input {
+    width: 100%;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid #cccccc;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    color: #333333;
+    border-radius: 4px;
+    transition: box-shadow 0.5s ease;
+}
+
 .input-group .btn-ask:hover {
     background-color: #ffd700;
     transform: none; /* Ensures no growth on hover */
 }
 
-input:focus {
-    box-shadow: 0 0 10px rgba(255, 105, 180, 0.25);
-}
 
 .btn-group {
     display: flex;
