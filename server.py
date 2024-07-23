@@ -7,7 +7,7 @@ from datetime import datetime
 import calendar
 from openai import OpenAI
 
-API_KEY = 'sk-proj-x85B7R8nmuv7OY1krL0sT3BlbkFJnRrgAoL4fHnJp7G8nhwi'
+API_KEY = 'INSERT API KEY HERE'
 client = OpenAI(api_key=API_KEY)
 
 import openai
