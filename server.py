@@ -8,6 +8,10 @@ import calendar
 from openai import OpenAI
 
 
+API_KEY = 'API_KEY'
+client = OpenAI(api_key=API_KEY)
+
+
 def create_entry_summary(entry):
     completion = client.chat.completions.create(
         model="gpt-4o",
