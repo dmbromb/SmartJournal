@@ -1,28 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-
-<div class="container question-cont mt-5 mb-5">
-  <h2>Explore</h2>
-  <div class="btn-group">
-    <a href="{{ url_for('new_entry', date=today) }}" class="btn btn-primary btn-large">Today's Entry</a>
-    <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large">Past Entries</a>
-  </div>
-</div>
-
-<div class="container mt-5 mb-5">
-    <h2>Ask a question about your life, {{current_user.name}}!</h2>
-
-    <div id="ai-answers" class="chat-container mt-3">
-      <!-- This will contain multiple question-answer pairs -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-5">
+            <h2>Explore</h2>
+            <div class="btn-group">
+                <a href="{{ url_for('new_entry', date=today) }}" class="btn btn-primary btn-large">Today's Entry</a>
+                <a href="{{ url_for('view_past_entries') }}" class="btn btn-secondary btn-large">Past Entries</a>
+            </div>
+        </div>
+        <div class="col-md-12 mb-5">
+            <h2>Ask a question about your life, {{current_user.name}}!</h2>
+            <div id="ai-answers" class="chat-container mt-3">
+                <!-- This will contain multiple question-answer pairs -->
+            </div>
+            <form id="ai-question-form" action="{{ url_for('submit_ai_question') }}" method="POST">
+                <div class="input-group mb-3">
+                    <input class="form-control" id="ai_question" name="ai_question" placeholder="Ask a question about yourself" required>
+                    <button type="submit" class="btn btn-secondary btn-large btn-ask"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </form>
+            <div class="btn-group mt-2 mb-2">
+                <button type="button" class="btn-clear" id="clear-button">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
     </div>
-    <form id="ai-question-form" action="{{ url_for('submit_ai_question') }}" method="POST">
-      <div class="input-group mb-3">
-        <input class="form-control" id="ai_question" name="ai_question" placeholder="Ask a question about yourself" required>
-        <button type="submit" class="btn btn-secondary btn-large btn-ask"><i class="fas fa-paper-plane"></i></button>
-      </div>
-    </form>
 </div>
 {% endblock %}
 

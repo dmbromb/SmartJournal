@@ -10,13 +10,14 @@
     <table  class="table  table-bordered mt-4">
         <thead>
             <tr>
-                <th class="bg-secondary">Sunday</th>
                 <th class="bg-secondary">Monday</th>
                 <th class="bg-secondary">Tuesday</th>
                 <th class="bg-secondary">Wednesday</th>
                 <th class="bg-secondary">Thursday</th>
                 <th class="bg-secondary">Friday</th>
                 <th class="bg-secondary">Saturday</th>
+                <th class="bg-secondary">Sunday</th>
+
             </tr>
         </thead>
         <tbody>
@@ -27,12 +28,12 @@
                     <td class="bg-secondary"></td>
                 {% else %}
                     {% set date = "%04d-%02d-%02d" % (year, month, day) %}
-                    {% if date in entry_dates %}
+                    {% if date in entry_data %}
                         <td class="bg-white">
-                            <a href="{{ url_for('view_entry', entry_date=date) }}" class="text-dark">{{ day }}</a>
+                            <a href="{{ url_for('view_entry', entry_date=date) }}" class="text-dark" data-summary="{{ entry_data[date] }}">{{ day }}</a>
                         </td>
                     {% else %}
-                        <td class="bg-dark text-white"><a href="{{ url_for('new_entry', date=date) }}" class="text-light">{{ day }}</a></td>
+                        <td class="bg-dark text-white"><a href="{{ url_for('new_entry', date=date) }}" class="text-light" data-summary="Write entry to preview summary">{{ day }}</a></td>
                     {% endif %}
                 {% endif %}
                 {% if weekday == 6 %}
@@ -44,4 +45,8 @@
     </table>
     <a class="btn btn-secondary btn-large" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/display_summary.js') }}"></script>
 {% endblock %}

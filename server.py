@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory, jsonify
+from flask import Flask, render_template, request, url_for, redirect, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
@@ -7,12 +7,39 @@ from datetime import datetime
 import calendar
 from openai import OpenAI
 
-API_KEY = 'INSERT API KEY HERE'
+API_KEY = 'sk-proj-xgb5Jtg7D2qg9gkfq1gQT3BlbkFJJ9vnubewA5rMbw4ueTn7'
 client = OpenAI(api_key=API_KEY)
 
-import openai
 
-def process_query(question, user):
+def create_entry_summary(entry):
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an efficient and brief AI summarizer, specialized in summarizing journal entries in 3 to 4 key points. "
+                    "Your job is to create the shortest possible summary of a journal entry in 3 to 4 small very short sentences."
+                    "For example:\n"
+                    "-Entry: Today was a fun day. I spent the first part coding and working, and then my girlfriend came to help me pack. Now I am watching nextflix. "
+                    "-Summary: Fun day. Code and work. Pack with girlfriend. Netflix."
+                    "\n Example 2"
+                    "-Entry: Today I went to work early. I had to finish so much stuff... Then at 6 or so I went to the gym, and then worked on my start up. I also packed a bit more."
+                    "Summary: Hard day @work. Gym. Start-Up progress. Pack."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Summarize this entry as succinctly as possible without losing much information: {entry}.\n\n"
+
+            }
+        ]
+    )
+    answer = completion.choices[0].message.content
+    return answer
+
+
+def process_query(question, user, conversation_history):
     entries = db.session.query(Journal_Entry).filter(Journal_Entry.user_id == user.id).all()
     if not entries:
         abort(404)
@@ -23,9 +50,15 @@ def process_query(question, user):
     for d, e in zip(dates, entries):
         journal_entries_string += f'{d}: \n{e}\n\n'
     print(journal_entries_string)
+
+    conversation_history.append({
+        "role": "user",
+        "content": question
+    })
+
     completion = client.chat.completions.create(
         model="gpt-4o",
-        messages=[
+        messages=conversation_history + [
             {
                 "role": "system",
                 "content": (
@@ -53,9 +86,6 @@ def process_query(question, user):
     )
     answer = completion.choices[0].message.content
     return answer
-
-
-
 
 
 app = Flask(__name__)
@@ -93,6 +123,7 @@ class Journal_Entry(db.Model):
     __tablename__ = 'journal_entry'
     id = db.Column(db.Integer, primary_key=True)
     entry = db.Column(db.String(10000))
+    summary = db.Column(db.String(1000))
     entry_date = db.Column(db.String(15), default=datetime.now().strftime('%Y-%m-%d'))
     created_on = db.Column(db.DateTime, default=datetime.now())
     last_edited = db.Column(db.DateTime, default=datetime.now())
@@ -185,15 +216,17 @@ def new_entry(date):
         today = date
     if request.method == 'POST':
         journal_entry = request.form.get('journal_entry')
+        journal_entry_summary = create_entry_summary(journal_entry)
         # Save in database
         new_entry = Journal_Entry(
             entry=journal_entry,
+            summary=journal_entry_summary,
             user_id=current_user.id,
             entry_date=today
         )
         db.session.add(new_entry)
         db.session.commit()
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('view_past_entries'))
     return render_template("new_entry.html", logged_in=True, date=today)
 
 
@@ -206,11 +239,10 @@ def view_past_entries():
 
     cal = calendar.Calendar()
     month_days = [(day, (datetime(year, month, day).weekday() if day else None)) for day in cal.itermonthdays(year, month)]
-
     user_entries = db.session.query(Journal_Entry).filter_by(user_id=current_user.id).all()
-    entry_dates = [entry.entry_date for entry in user_entries]
+    entry_data = {entry.entry_date: entry.summary for entry in user_entries}
 
-    return render_template("view_past_entries.html", logged_in=True, month_days=month_days, now=now, year=year, month=month, entry_dates=entry_dates)
+    return render_template("view_past_entries.html", logged_in=True, month_days=month_days, now=now, year=year, month=month, entry_data=entry_data)
 
 @app.route('/view_entry/<entry_date>')
 @login_required
@@ -236,11 +268,27 @@ def delete_entry():
     db.session.commit()
     return redirect(url_for('view_past_entries'))
 
+# Do the below correctly
+@app.route('/previous_entry', methods=['POST'])
+@login_required
+def previous_entry():
+    pass
+@app.route('/next_entry', methods=['POST'])
+@login_required
+def next_entry():
+    pass
+
 @app.route('/submit_ai_question', methods=['POST'])
 @login_required
 def submit_ai_question():
-    question = request.json.get('ai_question')
-    answer = process_query(question, current_user)
+    data = request.json
+    question = data.get('ai_question')
+    conversation_history = data.get('conversation_history', [])
+
+    conversation_history.append({"role": "user", "content": question})
+    answer = process_query(question, current_user, conversation_history)
+    conversation_history.append({"role": "assistant", "content": answer})
+
     new_question = Ai_Question(
         question=question,
         answer=answer,

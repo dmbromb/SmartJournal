@@ -2,7 +2,12 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="title mb-4 mt-4">Journal Entry for {{ date }}</h1>
+    <div class="arrow-container d-flex justify-content-between align-items-center">
+<!--        Add link of previous and next to the buttons-->
+        <a href="{{url_for('previous_entry')}}" class="btn btn-primary">&laquo; Prev</a>
+        <h1 class="title mb-4 mt-4">Journal Entry for {{ date }}</h1>
+        <a href="#" class="btn btn-primary">Next &raquo;</a>
+    </div>
     <div class="card">
         <div class="card-body">
             <textarea class="form-control" id="journal_entry" name="journal_entry" rows="10" readonly>{{ entry.entry }}</textarea>
@@ -10,7 +15,9 @@
                 <!-- Delete Button -->
                 <form action="{{ url_for('delete_entry') }}" method="POST">
                     <input type="hidden" name="entry_date" value="{{ date }}">
-                    <button type="submit" class="btn btn-danger btn-large">Delete Entry</button>
+                    <button type="submit" class=" btn-clear" id="clear-button">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </form>
             </div>
             <div class="btn-group mt-4">
